@@ -4,8 +4,22 @@ import requests
 import pickle
 
 # Load the processed data and similarity matrix
-with open('movie_data.pkl', 'rb') as file:
-    movies, cosine_sim = pickle.load(file)
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+movies = pd.read_csv('tmdb_5000_movies.csv')
+credits = pd.read_csv('tmdb_5000_credits.csv')
+
+movies = movies.merge(credits, on='title')
+
+# simple processing (you may already have this)
+movies['overview'] = movies['overview'].fillna('')
+
+cv = CountVectorizer(max_features=2000, stop_words='english')
+vectors = cv.fit_transform(movies['overview']).toarray()
+
+cosine_sim = cosine_similarity(vectors)
 
 # Your TMDB API key
 api_key = "525fb3cdbb9012071174dd036400b84b"
