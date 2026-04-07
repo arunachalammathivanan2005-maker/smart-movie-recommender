@@ -1,1 +1,1 @@
-# movie-recommender
+# smart-movie-recommender
